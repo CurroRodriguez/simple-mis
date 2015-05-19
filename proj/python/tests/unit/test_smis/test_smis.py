@@ -37,7 +37,7 @@
 import unittest
 
 import smis
-import _utils as utils
+from smis import _utils as utils
 
 
 class TestClient(unittest.TestCase):

@@ -37,7 +37,8 @@
 """
 Python library that provides a simple interface to Autodesk InfraWorks 360 Model Information Service.
 """
-import _utils as utils
+from smis import _utils as utils
+
 
 class Client(object):
     """
@@ -131,3 +132,4 @@ class _Resource(object):
 
     def __getattr__(self, item):
         return self.item(item)
+
