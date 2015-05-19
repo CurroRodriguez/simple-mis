@@ -34,3 +34,30 @@
 # resulting binaries, or any related technical documentation,  in violation of
 # U.S. or other applicable export control laws.
 #
+import requests
+
+from _utils import url_join
+
+_MIS_ENDPOINT = 'https://api-devprod.infraworks.autodesk.com'
+_MIS_ACCEPT_TYPE = 'application/vnd.autodesk.infraworks-v1+json'
+
+class MISServiceProxy(object):
+    """
+
+    """
+
+    def __init__(self, oauth_access_token):
+        self._token = oauth_access_token
+
+
+    @property
+    def endpoint(self):
+        return _MIS_ENDPOINT
+
+    def get(self, rel_path):
+        full_url = url_join(_MIS_ENDPOINT, rel_path)
+        headers = {'Accept': _MIS_ACCEPT_TYPE}
+        return self._do_get(full_url, headers, self._token)
+
+    def _do_get(self, url, headers, token):
+        return requests.get(url, headers=headers, auth=token)

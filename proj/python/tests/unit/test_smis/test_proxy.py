@@ -36,9 +36,51 @@
 #
 import unittest
 
+from smis._proxy import MISServiceProxy
+from smis._proxy import _MIS_ACCEPT_TYPE
+from smis._proxy import _MIS_ENDPOINT
+from smis._utils import  url_join
 
-class TestClass(unittest.TestCase):
-    pass
+class TestMISServiceProxy(unittest.TestCase):
+
+    def setUp(self):
+        self.token = 'token'
+        self.proxy = MISServiceProxySpy(self.token)
+        return  super(TestMISServiceProxy, self).setUp()
+
+    def test_requires_oauth_token(self):
+        self.assertEqual(self.proxy.token, self.token)
+
+
+    def test_provides_endpoint(self):
+        self.assertEqual(self.proxy.endpoint, _MIS_ENDPOINT)
+
+    def test_requests_the_full_url_specified(self):
+        self.proxy.get('relative/path')
+        expected_full_url = url_join(_MIS_ENDPOINT, 'relative', 'path')
+        self.assertEqual(expected_full_url, self.proxy.requested_url)
+
+    def test_uses_mis_accept_header(self):
+        self.proxy.get('relative/path')
+        self.assertEqual(self.proxy.headers.get('Accept'), _MIS_ACCEPT_TYPE)
+
+    def test_send_request_with_specified_access_token(self):
+        self.proxy.get('relative/path')
+        self.assertEqual(self.proxy.auth, self.token)
+
+
+
+
+class MISServiceProxySpy(MISServiceProxy):
+
+    @property
+    def token(self):
+        return self._token
+
+    def _do_get(self, url, headers, auth):
+        self.requested_url = url
+        self.headers = headers
+        self.auth = auth
 
 
 if __name__ == '__main__':

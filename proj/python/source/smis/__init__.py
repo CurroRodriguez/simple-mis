@@ -37,99 +37,20 @@
 """
 Python library that provides a simple interface to Autodesk InfraWorks 360 Model Information Service.
 """
-from smis import _utils as utils
+from _oxygen import OxygenAuthenticationProxy
+from _proxy import MISServiceProxy
+from _client import Client
 
-
-class Client(object):
+def connect(key, secret, login_callback):
     """
-    Model Information Service client application.
-
-    This class is provided as entry point for all interfaces that communicate with the Autodesk InfraWorks 360 Model
-    Information Service. The class is instantiated with a ``service`` proxy that knows how to communicate with
-    the on-line service REST API.
-
-    Client applications should not instantiate this class directly, and they should use the ``connect()`` method
-    instead to access the ``Client`` object.
+    Connects to Autodesk InfraWorks 360 Model Information Service and returns a client object to access the service.
+    
+    :param key: Consumer key for an authorized application.
+    :param secret: Consumer secret for an authorized application.
+    :param login_callback: Login callback to authenticate user.
+    :return: Client object that provides interface to access the service
     """
-
-    def __init__(self, service):
-        self._service = service
-        self._root_resource = _Resource('', self._service)
-
-    @property
-    def url(self):
-        """
-        Provides the end-point URL of the Autodesk InfraWorks 360 Model Information Service.
-
-        :return:
-            A string containing the URL to the Autodesk InfraWorks 360 Model Information Service.
-        """
-        return self._service.endpoint
-
-    def get(self):
-        """
-        Access information about the service end-point.
-
-        :return:
-            Returns the response from the service end-point.
-
-        ..  todo::
-            Complete documentation for this method.
-        """
-        return self._root_resource.get()
-
-    def __getattr__(self, item):
-        return _Resource(item, self._service, self._root_resource)
-
-
-
-class _Resource(object):
-    """
-    Temporary ``_Resource`` class documentation
-    """
-
-    def __init__(self, url_token, service, parent=None):
-        self._url_token = url_token
-        self._service = service
-        self._parent = parent
-
-    @property
-    def url(self):
-        """
-        Provides the full URL to the resource.
-
-        :return:
-            A string containing the full URL to the resource.
-        """
-        return utils.url_join(self._service.endpoint, self.path)
-
-    @property
-    def path(self):
-        """
-        Provides the relative path to the resource from the base end-point.
-
-        :return:
-            Returns a string containing the relative path to the resource.
-        """
-        return utils.url_join(self._parent.path, self._url_token) if self._parent else self._url_token
-
-    def get(self):
-        """
-        Provides the resource representation.
-
-        :return:
-            Returns the resource representation.
-        """
-        return self._service.get(self.path)
-
-    def item(self, identity):
-        """
-        Temporary ``item()`` method documentation.
-        :param identity:
-        :return:
-        """
-        return _Resource(identity, self._service, self)
-
-    def __getattr__(self, item):
-        return self.item(item)
-
+    auth_proxy = OxygenAuthenticationProxy(key, secret, login_callback)
+    auth_token = auth_proxy.authenticate()
+    mis_service_proxy = MISServiceProxy(auth_token)
+    return Client(mis_service_proxy)

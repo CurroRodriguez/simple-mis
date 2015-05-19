@@ -36,15 +36,14 @@
 #
 import unittest
 
-import smis
+import smis._client as misclient
 from smis import _utils as utils
-
 
 class TestClient(unittest.TestCase):
 
     def setUp(self):
         self.service = ServiceMock('https://some.endpoint.autodesk.com')
-        self.client = smis.Client(self.service)
+        self.client = misclient.Client(self.service)
         return  super(TestClient, self).setUp()
 
     def test_client_url_is_service_endpoint(self):
@@ -111,7 +110,5 @@ class ServiceMock(object):
         self.requested_url = url
         return self.response
 
-
-
-if __name__=='__main__':
+if __name__ == '__main__':
     unittest.main()
