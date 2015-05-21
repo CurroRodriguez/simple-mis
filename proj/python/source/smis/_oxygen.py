@@ -38,6 +38,7 @@
 Temporary documentation
 """
 from requests_oauthlib import OAuth1Session as Session
+from requests_oauthlib import OAuth1 as Credentials
 
 from smis._utils import url_join
 
@@ -58,7 +59,7 @@ class OxygenAuthenticationProxy(object):
         self._obtain_authorization_url()
         self._obtain_user_authorization()
         self._access_token()
-        return  self._client_token
+        return  self._credentials
 
     def _request_token(self):
         request_token_url = url_join(_AUTHENTICATION_ENDPOINT, 'oauth', 'RequestToken')
@@ -72,7 +73,7 @@ class OxygenAuthenticationProxy(object):
         self._authorization_url = self._session.authorization_url(authorize_url)
 
     def _obtain_user_authorization(self):
-        self._login_callback(self._authorization_url)
+        self._verifier = self._login_callback(self._authorization_url)
 
     def _access_token(self):
         self._session = Session(self._key,
@@ -83,8 +84,7 @@ class OxygenAuthenticationProxy(object):
         oauth_tokens = self._session.fetch_access_token(access_token_url)
         self._resource_owner_key = oauth_tokens.get('oauth_token')
         self._resource_owner_secret = oauth_tokens.get('oauth_token_secret')
-        self._client_token = Session(self._key,
+        self._credentials = Credentials(self._key,
                                      client_secret=self._secret,
                                      resource_owner_key=self._resource_owner_key,
-                                     resource_owner_secret=self._resource_owner_secret,
-                                     signature_type='auth_header')
+                                     resource_owner_secret=self._resource_owner_secret)

@@ -34,24 +34,60 @@
 # resulting binaries, or any related technical documentation,  in violation of
 # U.S. or other applicable export control laws.
 #
-"""
-Python library that provides a simple interface to Autodesk InfraWorks 360 Model Information Service.
-"""
-from requests import codes
-from _oxygen import OxygenAuthenticationProxy
-from _proxy import MISServiceProxy
-from _client import Client
+import ConfigParser as cp
+import os.path
+import sys
+import twill.commands as browser
 
-def connect(key, secret, login_callback):
-    """
-    Connects to Autodesk InfraWorks 360 Model Information Service and returns a client object to access the service.
-    
-    :param key: Consumer key for an authorized application.
-    :param secret: Consumer secret for an authorized application.
-    :param login_callback: Login callback to authenticate user.
-    :return: Client object that provides interface to access the service
-    """
-    auth_proxy = OxygenAuthenticationProxy(key, secret, login_callback)
-    auth_token = auth_proxy.authenticate()
-    mis_service_proxy = MISServiceProxy(auth_token)
-    return Client(mis_service_proxy)
+
+this_dir = os.path.dirname(__file__)
+rel_path_source = os.path.join(this_dir, '..', '..', 'source')
+abs_path_source = os.path.abspath(rel_path_source)
+sys.path.append(abs_path_source)
+import smis
+
+def before_all(context):
+    connect_to_mis(context)
+
+
+def connect_to_mis(context):
+    user_profile_dir = os.path.expanduser('~')
+    credentials_file = get_credentials_file_at(user_profile_dir)
+    credentials = get_credentials_from(credentials_file)
+    credentials_key = 'smis'
+    key = credentials.get(credentials_key, 'consumer_key')
+    secret = credentials.get(credentials_key, 'consumer_secret')
+    user = credentials.get(credentials_key, 'user_name')
+    password = credentials.get(credentials_key, 'password')
+    logger = OxygenLogger(user, password)
+    context.valid_client = smis.connect(key, secret, logger)
+
+
+def get_credentials_file_at(location):
+    as_txt = os.path.join(location, 'smis.txt')
+    if os.path.exists(as_txt):
+        return as_txt
+    as_ini = os.path.join(location, 'smis.ini')
+    if os.path.exists(as_ini):
+        return as_ini
+    raise RuntimeError('Credentials file not found.')
+
+
+def get_credentials_from(credentials_file):
+    parser = cp.ConfigParser()
+    parser.read(credentials_file)
+    return parser
+
+
+class OxygenLogger(object):
+
+    def __init__(self, user, password):
+        self._user = user
+        self._password = password
+
+    def __call__(self, url):
+        browser.go(url)
+        browser.showforms()
+        browser.fv('1', 'UserName', self._user)
+        browser.fv('1', 'password', self._password)
+        browser.submit('5')

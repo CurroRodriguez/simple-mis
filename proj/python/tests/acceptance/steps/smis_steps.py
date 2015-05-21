@@ -34,24 +34,51 @@
 # resulting binaries, or any related technical documentation,  in violation of
 # U.S. or other applicable export control laws.
 #
-"""
-Python library that provides a simple interface to Autodesk InfraWorks 360 Model Information Service.
-"""
-from requests import codes
-from _oxygen import OxygenAuthenticationProxy
-from _proxy import MISServiceProxy
-from _client import Client
+from behave import *
+import nose.tools as verify
+import smis
 
-def connect(key, secret, login_callback):
-    """
-    Connects to Autodesk InfraWorks 360 Model Information Service and returns a client object to access the service.
-    
-    :param key: Consumer key for an authorized application.
-    :param secret: Consumer secret for an authorized application.
-    :param login_callback: Login callback to authenticate user.
-    :return: Client object that provides interface to access the service
-    """
-    auth_proxy = OxygenAuthenticationProxy(key, secret, login_callback)
-    auth_token = auth_proxy.authenticate()
-    mis_service_proxy = MISServiceProxy(auth_token)
-    return Client(mis_service_proxy)
+@given('we provide valid credentials and callback')
+def we_provide_valid_credentials_and_callback(context):
+    print('IN SCENARIO OUTLINE')
+    context.client = context.valid_client
+
+
+@given('a models collection resource')
+def a_models_collection_resource(context):
+    context.resource = context.client.models
+
+
+@given('a model resource')
+def a_model_resource(context):
+    context.resource = context.client.models.item('32553')
+
+
+@given('a proposal resource')
+def a_proposal_resource(context):
+    context.resource = context.client.models.item('32553').proposals.item('master')
+
+
+@given('an object collection resource')
+def an_object_collection_resource(context):
+    context.resource = context.client.models.item('32553').proposals.item('master').roads
+
+
+@given('an object resource')
+def step_imp(context):
+    context.resource = context.client.models.item('32553').proposals.item('master').roads.item('6')
+
+
+@when('we call get in client')
+def we_call_get_in_client(context):
+    context.response = context.client.get()
+
+
+@when('we get resource')
+def we_get_resource(context):
+    context.response = context.resource.get()
+
+
+@then('the result is ok')
+def the_result_is_ok(context):
+    verify.eq_(context.response.status_code, smis.codes.ok)

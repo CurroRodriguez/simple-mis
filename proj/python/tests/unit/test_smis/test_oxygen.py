@@ -103,7 +103,7 @@ class OxygenAuthenticationProxyMock(o2.OxygenAuthenticationProxy):
         self._login_callback(self._authorization_url)
 
     def _access_token(self):
-        self._client_token = 'client_token'
+        self._credentials = 'client_token'
 
 if __name__ == '__main__':
     unittest.main()
