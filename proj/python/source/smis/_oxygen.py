@@ -37,8 +37,10 @@
 """
 Temporary documentation
 """
+import requests
 from requests_oauthlib import OAuth1Session as Session
 from requests_oauthlib import OAuth1 as Credentials
+import urlparse
 
 from smis._utils import url_join
 
@@ -76,14 +78,15 @@ class OxygenAuthenticationProxy(object):
         self._verifier = self._login_callback(self._authorization_url)
 
     def _access_token(self):
-        self._session = Session(self._key,
-                                client_secret=self._secret,
-                                resource_owner_key=self._resource_owner_key,
-                                resource_owner_secret=self._resource_owner_secret)
+        oauth = Credentials(self._key,
+                            client_secret=self._secret,
+                            resource_owner_key=self._resource_owner_key,
+                            resource_owner_secret=self._resource_owner_secret)
         access_token_url = url_join(_AUTHENTICATION_ENDPOINT, 'oauth', 'AccessToken')
-        oauth_tokens = self._session.fetch_access_token(access_token_url)
-        self._resource_owner_key = oauth_tokens.get('oauth_token')
-        self._resource_owner_secret = oauth_tokens.get('oauth_token_secret')
+        response = requests.post(access_token_url, auth=oauth)
+        response_data = urlparse.parse_qs(response.content)
+        self._resource_owner_key = response_data.get('oauth_token')[0]
+        self._resource_owner_secret = response_data.get('oauth_token_secret')[0]
         self._credentials = Credentials(self._key,
                                      client_secret=self._secret,
                                      resource_owner_key=self._resource_owner_key,
