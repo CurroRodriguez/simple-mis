@@ -1,0 +1,8 @@
+language: python
+python:
+  - "2.7"
+install:
+  - pip install -r proj/python/required_packages.txt
+
+script: nosetests proj/python/tests/unit
+script: behave proj/python/tests/acceptance
