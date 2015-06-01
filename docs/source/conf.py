@@ -21,8 +21,8 @@ import sphinx_rtd_theme
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 this_dir = os.path.dirname(__file__)
-lib_dir = os.path.join(this_dir, '..', '..', 'proj', 'python', 'source')
-sys.path.insert(0, os.path.abspath('.'))
+src_dir = os.path.join(this_dir, '..', '..', 'proj', 'python', 'source')
+sys.path.insert(0, os.path.abspath(src_dir))
 
 # -- General configuration ------------------------------------------------
 
@@ -74,6 +74,18 @@ release = '0.0.1'
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
 language = None
+
+################################################################################
+# EPILOG:
+#
+# Add any reST that will be included in all pages. This is a good place to
+# define replacement macros and hyperlinks.
+################################################################################
+rst_epilog = """
+.. |iw| replace:: Autodesk InfraWorks 360
+.. _iw: http://www.autodesk.com/products/infraworks-360/overview
+.. |mis| replace:: Autodesk InfraWorks 360 Model Information Service
+"""
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

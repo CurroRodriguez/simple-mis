@@ -35,7 +35,9 @@
 # U.S. or other applicable export control laws.
 #
 """
-Python library that provides a simple interface to Autodesk InfraWorks 360 Model Information Service.
+The ``smis`` Python package provides a simple interface to access |mis|, which exposes a REST API to access model data
+from |iw|_ models stored in the cloud. The package removes the complexity of authorizing an application to use the
+service and simplifies the process of sending HTTP requests to the service to access the resource information.
 """
 from requests import codes
 from _oxygen import OxygenAuthenticationProxy
@@ -44,7 +46,7 @@ from _client import Client
 
 def connect(key, secret, login_callback):
     """
-    Connects to Autodesk InfraWorks 360 Model Information Service and returns a client object to access the service.
+    This function authorizes the application to access.
     
     :param key: Consumer key for an authorized application.
     :param secret: Consumer secret for an authorized application.

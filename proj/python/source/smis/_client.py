@@ -40,9 +40,8 @@ class Client(object):
     """
     Model Information Service client application.
 
-    This class is provided as entry point for all interfaces that communicate with the Autodesk InfraWorks 360 Model
-    Information Service. The class is instantiated with a ``service`` proxy that knows how to communicate with
-    the on-line service REST API.
+    This class is provided as entry point for all interfaces that communicate with the |mis|. The class is instantiated
+    with a ``service`` proxy that knows how to communicate with the on-line service REST API.
 
     Client applications should not instantiate this class directly, and they should use the ``connect()`` method
     instead to access the ``Client`` object.
@@ -55,10 +54,10 @@ class Client(object):
     @property
     def url(self):
         """
-        Provides the end-point URL of the Autodesk InfraWorks 360 Model Information Service.
+        Provides the end-point URL of the |mis|.
 
         :return:
-            A string containing the URL to the Autodesk InfraWorks 360 Model Information Service.
+            A string containing the URL to the |mis|.
         """
         return self._service.endpoint
 
