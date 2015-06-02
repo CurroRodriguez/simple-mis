@@ -34,18 +34,14 @@
 # resulting binaries, or any related technical documentation,  in violation of
 # U.S. or other applicable export control laws.
 #
-"""
-Python library that provides a simple interface to Autodesk InfraWorks 360 Model Information Service.
-"""
-import _utils as utils
+from smis import _utils as utils
 
 class Client(object):
     """
     Model Information Service client application.
 
-    This class is provided as entry point for all interfaces that communicate with the Autodesk InfraWorks 360 Model
-    Information Service. The class is instantiated with a ``service`` proxy that knows how to communicate with
-    the on-line service REST API.
+    This class is provided as entry point for all interfaces that communicate with the |mis|. The class is instantiated
+    with a ``service`` proxy that knows how to communicate with the on-line service REST API.
 
     Client applications should not instantiate this class directly, and they should use the ``connect()`` method
     instead to access the ``Client`` object.
@@ -58,10 +54,10 @@ class Client(object):
     @property
     def url(self):
         """
-        Provides the end-point URL of the Autodesk InfraWorks 360 Model Information Service.
+        Provides the end-point URL of the |mis|.
 
         :return:
-            A string containing the URL to the Autodesk InfraWorks 360 Model Information Service.
+            A string containing the URL to the |mis|.
         """
         return self._service.endpoint
 
@@ -79,7 +75,6 @@ class Client(object):
 
     def __getattr__(self, item):
         return _Resource(item, self._service, self._root_resource)
-
 
 
 class _Resource(object):

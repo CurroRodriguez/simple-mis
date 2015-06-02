@@ -36,82 +36,52 @@
 #
 import unittest
 
-import smis
-import _utils as utils
+from smis._proxy import MISServiceProxy
+from smis._proxy import _MIS_ACCEPT_TYPE
+from smis._proxy import _MIS_ENDPOINT
+from smis._utils import  url_join
 
-
-class TestClient(unittest.TestCase):
+class TestMISServiceProxy(unittest.TestCase):
 
     def setUp(self):
-        self.service = ServiceMock('https://some.endpoint.autodesk.com')
-        self.client = smis.Client(self.service)
-        return  super(TestClient, self).setUp()
+        self.token = 'token'
+        self.proxy = MISServiceProxySpy(self.token)
+        return  super(TestMISServiceProxy, self).setUp()
 
-    def test_client_url_is_service_endpoint(self):
-        self.assertEqual(self.client.url, self.service.endpoint)
+    def test_requires_oauth_token(self):
+        self.assertEqual(self.proxy.token, self.token)
 
-    def test_returns_correct_response(self):
-        self.service.response = 'hello'
-        self.get_resource(self.client).expect_response(self.service.response)
 
-    def test_correct_relative_path_is_requested(self):
-        self.get_resource(self.client).expect_invoked_path('')
+    def test_provides_endpoint(self):
+        self.assertEqual(self.proxy.endpoint, _MIS_ENDPOINT)
 
-    def test_can_access_direct_resource(self):
-        self.given_resource(self.client.models).expect_url('models')
+    def test_requests_the_full_url_specified(self):
+        self.proxy.get('relative/path')
+        expected_full_url = url_join(_MIS_ENDPOINT, 'relative', 'path')
+        self.assertEqual(expected_full_url, self.proxy.requested_url)
 
-    def test_correct_url_is_invoked_on_child_resource(self):
-        self.service.response = 'child response'
-        self.get_resource(self.client.models).expect_response(self.service.response)
+    def test_uses_mis_accept_header(self):
+        self.proxy.get('relative/path')
+        self.assertEqual(self.proxy.headers.get('Accept'), _MIS_ACCEPT_TYPE)
 
-    def test_can_access_identifiable_resource(self):
-        model_id = '100'
-        self.given_resource(self.client.models.item(model_id)).expect_url('models', model_id)
-
-    def test_can_access_sub_resource(self):
-        self.given_resource(self.client.models.proposals).expect_url('models', 'proposals')
-
-    # Test Utilities
-    #
-    def given_resource(self, resource):
-        self.resource = resource
-        return self
-
-    def expect_url(self, *args):
-        expected_url = utils.url_join(self.service.endpoint, *args)
-        self.assertEqual(self.resource.url, expected_url)
-        return self
-
-    def get_resource(self, resource):
-        self.resource = resource
-        self.response = self.resource.get()
-        return self
-
-    def expect_invoked_path(self, *args):
-        expected_path = utils.url_join(*args)
-        self.assertEqual(self.service.requested_url, expected_path)
-        return self
-
-    def expect_response(self, response):
-        self.assertEqual(self.response, response)
-        return  self
+    def test_send_request_with_specified_access_token(self):
+        self.proxy.get('relative/path')
+        self.assertEqual(self.proxy.auth, self.token)
 
 
 
 
+class MISServiceProxySpy(MISServiceProxy):
 
-class ServiceMock(object):
+    @property
+    def token(self):
+        return self._token
 
-    def __init__(self, endpoint):
-        self.endpoint = endpoint
-        self.response = None
-        self.requested_url = None
-
-    def get(self, url):
+    def _do_get(self, url, headers, auth):
         self.requested_url = url
-        return self.response
+        self.headers = headers
+        self.auth = auth
 
 
-
-if __name__=='__main__':
+if __name__ == '__main__':
     unittest.main()

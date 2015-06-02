@@ -1,2 +1,0 @@
-# Required packages to build documentation.
-sphinx==1.3.1

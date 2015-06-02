@@ -5,5 +5,8 @@ Python Reference Guide
 ..  automodule:: smis
     :members:
 
-..  autoclass:: smis._Resource
+..  automodule:: smis._client
+    :members:
+
+..  autoclass:: smis._client._Resource
     :members:
