@@ -1,0 +1,22 @@
+# The compatible version of twill is hosted externally, and it is unverified.
+# At some point, we may want to port to a newer version, but it may require
+# recoding.
+#
+--allow-external twill
+--allow-unverified twill
+
+# Project dependencies. These packages are required by the library.
+#
+requests==2.7.0
+requests-oauthlib==0.5.0
+
+# Packages required for testing.
+#
+nose==1.3.6
+conttest==0.0.8
+behave==1.2.5
+twill==0.9
+
+# Packages required for documentation.
+#
+sphinx==1.3.1
