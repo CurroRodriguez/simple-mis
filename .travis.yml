@@ -4,4 +4,4 @@ python:
 install:
     - pip install -r requirements.txt
 
-script: make -f ./docs/makefile html
+script: make -f ./docs/Makefile html
