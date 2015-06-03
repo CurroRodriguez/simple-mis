@@ -13,7 +13,7 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
-   Python ``smis`` Library <python/python_index>
+   Library Reference <ref_guide>
 
 
 
