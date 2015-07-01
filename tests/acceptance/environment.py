@@ -88,6 +88,6 @@ class OxygenLogger(object):
     def __call__(self, url):
         browser.go(url)
         browser.showforms()
-        browser.fv('1', 'UserName', self._user)
-        browser.fv('1', 'password', self._password)
+        browser.fv('2', 'UserName', self._user)
+        browser.fv('2', 'password', self._password)
         browser.submit('5')

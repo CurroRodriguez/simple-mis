@@ -68,3 +68,7 @@ docs/build/
 
 # PyCharm project files
 .idea/
+
+# Continuous Integration Generated Files
+#
+source/smis/info.py
