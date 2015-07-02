@@ -60,4 +60,4 @@ class MISServiceProxy(object):
         return self._do_get(full_url, headers, self._token)
 
     def _do_get(self, url, headers, token):
-        return requests.get(url, headers=headers, auth=token)
+        return requests.get(url, headers=headers, auth=token, verify=True)
