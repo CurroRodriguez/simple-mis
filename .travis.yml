@@ -18,7 +18,7 @@ env:
 
 before_install:
     - sudo apt-get update
-    - sudo apt-get upgrade libssl1.0.0
+    - sudo apt-get install libssl1.0.0
 
 install:
     - pip install -r requirements.txt
