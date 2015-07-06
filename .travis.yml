@@ -17,7 +17,8 @@ env:
         - secure: "QUPS4s6OQf/v7k8NW01IKs9d6yeU1eloVWkZLQ4nWK/yo96iA3O8X00xnuno3VpMcWClNsa++gIRuY8A+ZkzrU/+5CikRLdwkxORFFj6Sy42YcfAq6xYwSH96x4My8lS0KOpR6PNw7PUJR/iRJgCWt0xL2OeIEdf8MvShxA4xd1c//Xwd+KeGAbh982Zthbubk0VWuKMafPYq0fYfUe6g+9PKha515GIwoo4sJAB3UIhjmTuZpw7Jttn5YJADIS7z3jBupsqbLbfizFwsRFTPX5KkTvJa+YpnkGnbQRGd0F8ioBwWlL8PVYSaJGh68LecAjWSlfmATYBtu1YTY9lHIngPq+DwAzL4vDNIZqF4fmvJLFGGtPB3qqxpZSjKLHM1EIwEGMAZlCMZu0EWEbSZnaRr8F2BihLRN0apglr7FAPxjAgenq8CF/gTl1zjZ16nOupxHPmBAxtote80EIqyNtgJRnnojiE9q4xShLgAd0/jnG7TvGKTJ2Pbk6QgnZsuP5frKPz/o1vxyOsldAhKMEbXp8VX1qtK8DE3YerOdqkCnPrCu43hyNZ/qhOjBVxisvymDedl1V4O0P9V+JF0vy9loFr6NQazk8VuyluN6ot6KqMeFnDsBHobySR7l+fjYGzY6WqCIY6u6NI06ourGBNDXBWq/+YUqfez5Nas1Y="
 
 before_install:
-    - sudo apt-get install --reinstall libssl1.0.0
+    - sudo apt-get update
+    - sudo apt-get upgrade
 
 install:
     - pip install -r requirements.txt
