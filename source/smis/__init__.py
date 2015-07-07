@@ -41,6 +41,7 @@ service and simplifies the process of sending HTTP requests to the service to ac
 """
 __author__ = u'Isaac Rodriguez'
 __copyright__ = u'(C) Copyright 2015 Autodesk, Inc.'
+author_email = u'isaac.rodriguez@autodesk.com'
 project = u'smis'
 description = u'Simple MIS Library'
 long_description=u'A simple library to access Autodesk InfraWorks 360 Model Information Service.'
@@ -48,7 +49,7 @@ docs_url=u'http://simple-mis.readthedocs.org/en/latest/'
 
 version_major = u'0'
 version_minor = u'0'
-version_patch = u'3'
+version_patch = u'4'
 
 version = u'{major}.{minor}'.format(major=version_major, minor=version_minor)
 release = u'{version}.{build}'.format(version=version, build=version_patch)

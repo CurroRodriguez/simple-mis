@@ -49,6 +49,7 @@ setup(
     description='{description}',
     long_description='{long_description}',
     author='{author}',
+    author_email={email}
     classifiers = {classifiers},
     url='{url}',
     packages=find_packages('source/smis'),
@@ -64,6 +65,7 @@ def generate_setup_script():
         description=smis.description,
         long_description=smis.long_description,
         author=smis.__author__,
+        email=smis.author_email,
         classifiers=smis.classifiers,
         url='https://github.com/CurroRodriguez/smis-python'
     )
