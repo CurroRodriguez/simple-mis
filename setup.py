@@ -49,12 +49,11 @@ def in_pull_request():
     return pull_request != 'false'
 
 
-# We only build the setup in integrations into master branch.
-#
-in_master = in_master_branch()
-is_pr = in_pull_request()
 
-if in_master and not is_pr:
+in_master = in_master_branch()
+#is_pr = in_pull_request()
+
+if in_master:
     setup(
         name=smis.project,
         version=smis.release,
