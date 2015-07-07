@@ -39,6 +39,22 @@ The ``smis`` Python package provides a simple interface to access |mis|, which e
 from |iw|_ models stored in the cloud. The package removes the complexity of authorizing an application to use the
 service and simplifies the process of sending HTTP requests to the service to access the resource information.
 """
+__author__ = u'Isaac Rodriguez'
+__copyright__ = u'(C) Copyright 2015 Autodesk, Inc.'
+project = u'smis'
+description = u'Simple MIS Library'
+long_description=u'''
+A simple library to access Autodesk InfraWorks 360 Model Information Service.
+'''
+docs_url=u'http://simple-mis.readthedocs.org/en/latest/'
+
+version_major = u'0'
+version_minor = u'0'
+version_patch = u'2'
+
+version = u'{major}.{minor}'.format(major=version_major, minor=version_minor)
+release = u'{version}.{build}'.format(version=version, build=version_patch)
+
 from requests import codes
 from _oxygen import OxygenAuthenticationProxy
 from _proxy import MISServiceProxy

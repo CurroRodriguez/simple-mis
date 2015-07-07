@@ -51,6 +51,34 @@ def before_all(context):
 
 
 def connect_to_mis(context):
+    key, secret, user, password = get_credentials()
+    logger = OxygenLogger(user, password)
+    context.valid_client = smis.connect(key, secret, logger)
+
+
+def get_credentials():
+    '''
+    Returns necessary credentials to log in.
+    :return: A tupple in the form (consumer_key, consumer_secret, user_name, password) to log in
+    users for testing.
+    '''
+
+    consumer_key, consumer_secret, user_name, password = get_credentials_from_environment()
+    if not (consumer_key and consumer_secret and user_name and password):
+        consumer_key, consumer_secret, user_name, password = get_credentials_from_user_file()
+    return (consumer_key, consumer_secret, user_name, password)
+
+
+
+def get_credentials_from_environment():
+    key = os.environ.get('O2_CONSUMER_KEY')
+    secret = os.environ.get('O2_CONSUMER_SECRET')
+    user = os.environ.get('O2_USER_NAME')
+    password = os.environ.get('O2_PASSWORD')
+    return (key, secret, user, password)
+
+
+def get_credentials_from_user_file():
     user_profile_dir = os.path.expanduser('~')
     credentials_file = get_credentials_file_at(user_profile_dir)
     credentials = get_credentials_from(credentials_file)
@@ -59,8 +87,7 @@ def connect_to_mis(context):
     secret = credentials.get(credentials_key, 'consumer_secret')
     user = credentials.get(credentials_key, 'user_name')
     password = credentials.get(credentials_key, 'password')
-    logger = OxygenLogger(user, password)
-    context.valid_client = smis.connect(key, secret, logger)
+    return (key, secret, user, password)
 
 
 def get_credentials_file_at(location):
@@ -88,6 +115,6 @@ class OxygenLogger(object):
     def __call__(self, url):
         browser.go(url)
         browser.showforms()
-        browser.fv('1', 'UserName', self._user)
-        browser.fv('1', 'password', self._password)
+        browser.fv('2', 'UserName', self._user)
+        browser.fv('2', 'password', self._password)
         browser.submit('5')

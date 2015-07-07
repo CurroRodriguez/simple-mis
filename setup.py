@@ -34,30 +34,41 @@
 # resulting binaries, or any related technical documentation,  in violation of
 # U.S. or other applicable export control laws.
 #
-import requests
+import os
+from setuptools import setup, find_packages
+import smis
 
-from _utils import url_join
-
-_MIS_ENDPOINT = 'https://api-devprod.infraworks.autodesk.com'
-_MIS_ACCEPT_TYPE = 'application/vnd.autodesk.infraworks-v1+json'
-
-class MISServiceProxy(object):
-    """
-
-    """
-
-    def __init__(self, oauth_access_token):
-        self._token = oauth_access_token
+def in_master_branch():
+    master_branch = 'master'
+    branch = os.environ.get('TRAVIS_BRANCH', master_branch)
+    return branch == master_branch
 
 
-    @property
-    def endpoint(self):
-        return _MIS_ENDPOINT
+def in_pull_request():
+    pull_request = os.environ.get('TRAVIS_PULL_REQUEST', 'false')
+    return pull_request != 'false'
 
-    def get(self, rel_path):
-        full_url = url_join(_MIS_ENDPOINT, rel_path)
-        headers = {'Accept': _MIS_ACCEPT_TYPE}
-        return self._do_get(full_url, headers, self._token)
 
-    def _do_get(self, url, headers, token):
-        return requests.get(url, headers=headers, auth=token, verify=False)
+
+in_master = in_master_branch()
+#is_pr = in_pull_request()
+
+if in_master:
+    setup(
+        name=smis.project,
+        version=smis.release,
+        description=smis.description,
+        long_description=smis.long_description,
+        author=smis.__author__,
+        classifiers = [
+            'Development Status :: 3 - Alpha',
+            'Programming Language :: Python :: 2.7',
+        ],
+        url=smis.docs_url,
+        packages=find_packages('source/smis'),
+        install_requires=['requests>=2.7', 'requests-oauthlib>=0.5']
+    )
+else:
+    exit(0)
+
+
