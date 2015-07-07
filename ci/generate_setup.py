@@ -35,40 +35,41 @@
 # U.S. or other applicable export control laws.
 #
 import os
-from setuptools import setup, find_packages
+
 import smis
-
-def in_master_branch():
-    master_branch = 'master'
-    branch = os.environ.get('TRAVIS_BRANCH', master_branch)
-    return branch == master_branch
+import btools.directories
 
 
-def in_pull_request():
-    pull_request = os.environ.get('TRAVIS_PULL_REQUEST', 'false')
-    return pull_request != 'false'
+setup_template = """
+from setuptools import setup, find_packages
+
+setup(
+    name='{name}',
+    version='{version}',
+    description='{description}',
+    long_description='{long_description}',
+    author='{author}',
+    classifiers = {classifiers},
+    url='{url}',
+    packages=find_packages('source/smis'),
+    install_requires=['requests>=2.7', 'requests-oauthlib>=0.5']
+)
+"""
 
 
-
-in_master = in_master_branch()
-#is_pr = in_pull_request()
-
-if in_master:
-    setup(
+def generate_setup_script():
+    script_contents = setup_template.format(
         name=smis.project,
         version=smis.release,
         description=smis.description,
         long_description=smis.long_description,
         author=smis.__author__,
-        classifiers = [
-            'Development Status :: 3 - Alpha',
-            'Programming Language :: Python :: 2.7',
-        ],
-        url=smis.docs_url,
-        packages=find_packages('source/smis'),
-        install_requires=['requests>=2.7', 'requests-oauthlib>=0.5']
+        classifiers=smis.classifiers,
+        url='https://github.com/CurroRodriguez/smis-python'
     )
-else:
-    exit(0)
+    script_filename = os.path.join(btools.directories.project_root, 'setup.py')
+    with open(script_filename, 'w') as fout:
+        fout.write(script_contents)
 
-
+if __name__=='__main__':
+    generate_setup_script()
