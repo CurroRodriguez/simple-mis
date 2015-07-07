@@ -49,7 +49,7 @@ setup(
     description='{description}',
     long_description='{long_description}',
     author='{author}',
-    author_email={email}
+    author_email='{email}',
     classifiers = {classifiers},
     url='{url}',
     packages=find_packages('source/smis'),
