@@ -51,9 +51,9 @@ def in_pull_request():
 
 
 in_master = in_master_branch()
-#is_pr = in_pull_request()
 
 if in_master:
+    print 'Creating library distribution package....'
     setup(
         name=smis.project,
         version=smis.release,
@@ -69,6 +69,7 @@ if in_master:
         install_requires=['requests>=2.7', 'requests-oauthlib>=0.5']
     )
 else:
+    print 'Skipping creationg of library distribution package....'
     exit(0)
 
 
