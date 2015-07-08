@@ -52,7 +52,7 @@ setup(
     author_email='{email}',
     classifiers = {classifiers},
     url='{url}',
-    package_dir = {'': 'source'},
+    package_dir = {{'': 'source'}},
     packages=['smis'],
     install_requires=['requests>=2.7', 'requests-oauthlib>=0.5']
 )
