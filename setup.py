@@ -12,5 +12,5 @@ setup(
     url='https://github.com/CurroRodriguez/smis-python',
     package_dir = {'': 'source'},
     packages=['smis'],
-    install_requires=['requests>=2.7', 'requests-oauthlib>=0.5']
+        install_requires=['requests>=2.7', 'requests-oauthlib>=0.5']
 )
