@@ -72,6 +72,18 @@ def connect(key, secret, login_callback):
     :param secret: Consumer secret for an authorized application.
     :param login_callback: Login callback to authenticate user.
     :return: Client object that provides interface to access the service
+
+    The following example shows the ``connect`` method use::
+
+        import smis
+
+        def my_login_callback(url):
+            # display provided url to allow user to enter credentials.
+            #
+            show_browser(url) # not implemented
+
+        client = smis.connect('consumer-key', 'consumer-secret', my_login_callback)
+
     """
     auth_proxy = OxygenAuthenticationProxy(key, secret, login_callback)
     auth_token = auth_proxy.authenticate()

@@ -58,6 +58,9 @@ class Client(object):
 
         :return:
             A string containing the URL to the |mis|.
+
+        ..  todo::
+            Provide sample code.
         """
         return self._service.endpoint
 
@@ -69,7 +72,7 @@ class Client(object):
             Returns the response from the service end-point.
 
         ..  todo::
-            Complete documentation for this method.
+            Finalize behavior and complete documentation with sample code.
         """
         return self._root_resource.get()
 
@@ -94,6 +97,9 @@ class _Resource(object):
 
         :return:
             A string containing the full URL to the resource.
+
+        ..  todo::
+            Provide sample code.
         """
         return utils.url_join(self._service.endpoint, self.path)
 
@@ -104,6 +110,9 @@ class _Resource(object):
 
         :return:
             Returns a string containing the relative path to the resource.
+
+        ..  todo::
+            Provide sample code.
         """
         return utils.url_join(self._parent.path, self._url_token) if self._parent else self._url_token
 
@@ -113,6 +122,9 @@ class _Resource(object):
 
         :return:
             Returns the resource representation.
+
+        ..  todo::
+            Finalize behavior and complete documentation with sample code.
         """
         return self._service.get(self.path)
 
@@ -121,6 +133,9 @@ class _Resource(object):
         Temporary ``item()`` method documentation.
         :param identity:
         :return:
+
+        ..  todo::
+            Finalize behavior and complete documentation with sample code.
         """
         return _Resource(identity, self._service, self)
 

@@ -87,6 +87,14 @@ rst_epilog = """
 .. |iw| replace:: Autodesk InfraWorks 360
 .. _iw: http://www.autodesk.com/products/infraworks-360/overview
 .. |mis| replace:: Autodesk InfraWorks 360 Model Information Service
+.. |A360| replace:: Autodesk 360
+.. _A360: http://autodesk360.com
+.. |python| replace:: Python
+.. _python: http://www.python.org
+.. |pypi| replace:: Python Package Index
+.. _pypi: https://pypi.python.org/pypi
+.. |repo| replace:: GitHub repository
+.. _repo: https://github.com/CurroRodriguez/smis-python
 """
 
 # There are two options for replacing |today|: either, you set today to some
