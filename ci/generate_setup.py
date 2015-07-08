@@ -34,46 +34,45 @@
 # resulting binaries, or any related technical documentation,  in violation of
 # U.S. or other applicable export control laws.
 #
+import os
+
+import smis
+import btools.directories
+
+
+setup_template = """
+from setuptools import setup, find_packages
+
+setup(
+    name='{name}',
+    version='{version}',
+    description='{description}',
+    long_description='{long_description}',
+    author='{author}',
+    author_email='{email}',
+    classifiers = {classifiers},
+    url='{url}',
+    package_dir = {{'': 'source'}},
+    packages=['smis'],
+    install_requires=['requests>=2.7', 'requests-oauthlib>=0.5']
+)
 """
-The ``smis`` Python package provides a simple interface to access |mis|, which exposes a REST API to access model data
-from |iw|_ models stored in the cloud. The package removes the complexity of authorizing an application to use the
-service and simplifies the process of sending HTTP requests to the service to access the resource information.
-"""
-__author__ = u'Isaac Rodriguez'
-__copyright__ = u'(C) Copyright 2015 Autodesk, Inc.'
-author_email = u'isaac.rodriguez@autodesk.com'
-project = u'smis'
-description = u'Simple MIS Library'
-long_description=u'A simple library to access Autodesk InfraWorks 360 Model Information Service.'
-docs_url=u'http://simple-mis.readthedocs.org/en/latest/'
 
-version_major = u'0'
-version_minor = u'0'
-version_patch = u'5'
 
-version = u'{major}.{minor}'.format(major=version_major, minor=version_minor)
-release = u'{version}.{build}'.format(version=version, build=version_patch)
+def generate_setup_script():
+    script_contents = setup_template.format(
+        name=smis.project,
+        version=smis.release,
+        description=smis.description,
+        long_description=smis.long_description,
+        author=smis.__author__,
+        email=smis.author_email,
+        classifiers=smis.classifiers,
+        url='https://github.com/CurroRodriguez/smis-python'
+    )
+    script_filename = os.path.join(btools.directories.project_root, 'setup.py')
+    with open(script_filename, 'w') as fout:
+        fout.write(script_contents)
 
-classifiers = [
-            'Development Status :: 3 - Alpha',
-            'Programming Language :: Python :: 2.7',
-        ]
-
-from requests import codes
-from _oxygen import OxygenAuthenticationProxy
-from _proxy import MISServiceProxy
-from _client import Client
-
-def connect(key, secret, login_callback):
-    """
-    This function authorizes the application to access.
-    
-    :param key: Consumer key for an authorized application.
-    :param secret: Consumer secret for an authorized application.
-    :param login_callback: Login callback to authenticate user.
-    :return: Client object that provides interface to access the service
-    """
-    auth_proxy = OxygenAuthenticationProxy(key, secret, login_callback)
-    auth_token = auth_proxy.authenticate()
-    mis_service_proxy = MISServiceProxy(auth_token)
-    return Client(mis_service_proxy)
+if __name__=='__main__':
+    generate_setup_script()
