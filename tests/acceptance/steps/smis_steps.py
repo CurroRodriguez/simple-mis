@@ -71,12 +71,14 @@ def step_imp(context):
 
 @when('we call get in client')
 def we_call_get_in_client(context):
-    context.response = context.client.get()
+    context.client.get()
+    context.response = context.client.response
 
 
 @when('we get resource')
 def we_get_resource(context):
-    context.response = context.resource.get()
+    context.resource.get()
+    context.response = context.resource.response
 
 
 @then('the result is ok')

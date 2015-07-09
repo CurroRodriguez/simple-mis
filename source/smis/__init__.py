@@ -60,6 +60,7 @@ classifiers = [
         ]
 
 from requests import codes
+from requests.exceptions import *
 from _oxygen import OxygenAuthenticationProxy
 from _proxy import MISServiceProxy
 from _client import Client

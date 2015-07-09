@@ -34,23 +34,34 @@
 # resulting binaries, or any related technical documentation,  in violation of
 # U.S. or other applicable export control laws.
 #
+import json
 import unittest
 
+from mocks import *
 import smis._client as misclient
 from smis import _utils as utils
 
 class TestClient(unittest.TestCase):
 
     def setUp(self):
+        self.mock_payload = '{"test": "payload"}'
+        self.mock_response = ResponseDouble(200, self.mock_payload)
         self.service = ServiceMock('https://some.endpoint.autodesk.com')
+        self.service.response = self.mock_response
         self.client = misclient.Client(self.service)
         return  super(TestClient, self).setUp()
 
     def test_client_url_is_service_endpoint(self):
         self.assertEqual(self.client.url, self.service.endpoint)
 
+    def test_response_is_none_if_get_not_invoked(self):
+        self.assertIsNone(self.client.response)
+
+    def test_returns_response_object_after_get_invoked(self):
+        self.get_resource(self.client)
+        self.assertIsNotNone(self.client.response)
+
     def test_returns_correct_response(self):
-        self.service.response = 'hello'
         self.get_resource(self.client).expect_response(self.service.response)
 
     def test_correct_relative_path_is_requested(self):
@@ -60,7 +71,6 @@ class TestClient(unittest.TestCase):
         self.given_resource(self.client.models).expect_url('models')
 
     def test_correct_url_is_invoked_on_child_resource(self):
-        self.service.response = 'child response'
         self.get_resource(self.client.models).expect_response(self.service.response)
 
     def test_can_access_identifiable_resource(self):
@@ -69,6 +79,16 @@ class TestClient(unittest.TestCase):
 
     def test_can_access_sub_resource(self):
         self.given_resource(self.client.models.proposals).expect_url('models', 'proposals')
+
+    def test_returns_payload_as_python_object(self):
+        self.get_resource(self.client)
+        payload_as_string = json.dumps(self.response)
+        self.assertEqual(payload_as_string, self.mock_payload)
+
+    def test_raises_exception_if_status_not_200(self):
+        with self.assertRaises(requests.HTTPError):
+            self.service.response = ResponseDouble(404, '')
+            self.get_resource(self.client)
 
     # Test Utilities
     #
@@ -92,23 +112,14 @@ class TestClient(unittest.TestCase):
         return self
 
     def expect_response(self, response):
-        self.assertEqual(self.response, response)
+        self.assertEqual(self.response, response.json())
         return  self
 
 
 
 
 
-class ServiceMock(object):
 
-    def __init__(self, endpoint):
-        self.endpoint = endpoint
-        self.response = None
-        self.requested_url = None
-
-    def get(self, url):
-        self.requested_url = url
-        return self.response
 
 if __name__ == '__main__':
     unittest.main()

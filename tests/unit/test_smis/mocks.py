@@ -34,50 +34,52 @@
 # resulting binaries, or any related technical documentation,  in violation of
 # U.S. or other applicable export control laws.
 #
-import unittest
+import  requests
+from smis._proxy import MISServiceProxy
+
+class ServiceMock(object):
+    # This mock is used to test the client.
+
+    def __init__(self, endpoint):
+        self.endpoint = endpoint
+        self.response = None
+        self.requested_url = None
+
+    def get(self, url):
+        self.requested_url = url
+        return self.response
 
 
-from mocks import *
-from smis._proxy import _MIS_ACCEPT_TYPE
-from smis._proxy import _MIS_ENDPOINT
-from smis._utils import  url_join
+class MISServiceProxySpy(MISServiceProxy):
+    # This spy is used to test the proxy.
 
-class TestMISServiceProxy(unittest.TestCase):
+    def __init__(self, oauth_access_token):
+        self._response = ResponseDouble(200, '{"sample": "response"}')
+        return super(MISServiceProxySpy, self).__init__(oauth_access_token)
 
-    def setUp(self):
-        self.token = 'token'
-        self.proxy = MISServiceProxySpy(self.token)
-        return  super(TestMISServiceProxy, self).setUp()
+    @property
+    def token(self):
+        return self._token
 
-    def test_requires_oauth_token(self):
-        self.assertEqual(self.proxy.token, self.token)
+    @property
+    def response(self):
+        return self._response
 
+    @response.setter
+    def response(self, value):
+        self._response = value
 
-    def test_provides_endpoint(self):
-        self.assertEqual(self.proxy.endpoint, _MIS_ENDPOINT)
-
-    def test_requests_the_full_url_specified(self):
-        self.proxy.get('relative/path')
-        expected_full_url = url_join(_MIS_ENDPOINT, 'relative', 'path')
-        self.assertEqual(expected_full_url, self.proxy.requested_url)
-
-    def test_uses_mis_accept_header(self):
-        self.proxy.get('relative/path')
-        self.assertEqual(self.proxy.headers.get('Accept'), _MIS_ACCEPT_TYPE)
-
-    def test_send_request_with_specified_access_token(self):
-        self.proxy.get('relative/path')
-        self.assertEqual(self.proxy.auth, self.token)
-
-
-
-
-
-
-
-
+    def _do_get(self, url, headers, auth):
+        self.requested_url = url
+        self.headers = headers
+        self.auth = auth
+        return self.response
 
 
 
-if __name__ == '__main__':
-    unittest.main()
+class ResponseDouble(requests.Response):
+
+    def __init__(self, code, payload):
+        super(ResponseDouble, self).__init__()
+        self.status_code = code
+        self._content = payload
