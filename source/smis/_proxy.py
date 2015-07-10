@@ -49,7 +49,6 @@ class MISServiceProxy(object):
     def __init__(self, oauth_access_token):
         self._token = oauth_access_token
 
-
     @property
     def endpoint(self):
         return _MIS_ENDPOINT

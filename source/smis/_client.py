@@ -58,18 +58,32 @@ class Client(object):
 
         :return:
             A string containing the URL to the |mis|.
+
+        ..  todo::
+            Provide sample code.
         """
         return self._service.endpoint
 
-    def get(self):
+    @property
+    def response(self):
         """
-        Access information about the service end-point.
+        Returns the response object from the service. This property returns None if ``get()`` has not been invoked yet.
+        The property becomes handy in case of exceptions where it can provide more information about what went wrong.
 
         :return:
-            Returns the response from the service end-point.
+            The response object from accessing the client end-point.
+        """
+        return self._root_resource.response
+
+    def get(self):
+        """
+        Returns the service payload.
+
+        :return:
+            Returns the service end-point payload as a python object (a dict).
 
         ..  todo::
-            Complete documentation for this method.
+            Finalize behavior and complete documentation with sample code.
         """
         return self._root_resource.get()
 
@@ -79,13 +93,15 @@ class Client(object):
 
 class _Resource(object):
     """
-    Temporary ``_Resource`` class documentation
+    This internal class is accessed through the :py:class:`Client` interface an allows accessing resources
+    in the service.
     """
 
     def __init__(self, url_token, service, parent=None):
         self._url_token = url_token
         self._service = service
         self._parent = parent
+        self._response = None
 
     @property
     def url(self):
@@ -94,6 +110,9 @@ class _Resource(object):
 
         :return:
             A string containing the full URL to the resource.
+
+        ..  todo::
+            Provide sample code.
         """
         return utils.url_join(self._service.endpoint, self.path)
 
@@ -104,23 +123,45 @@ class _Resource(object):
 
         :return:
             Returns a string containing the relative path to the resource.
+
+        ..  todo::
+            Provide sample code.
         """
         return utils.url_join(self._parent.path, self._url_token) if self._parent else self._url_token
 
+    @property
+    def response(self):
+        """
+        Returns the response object for the resource. This property returns None if ``get()`` has not been invoked yet.
+        The property becomes handy in case of exceptions where it can provide more information about what went wrong.
+
+        :return:
+            The response object from accessing the resource.
+        """
+        return self._response
+
     def get(self):
         """
-        Provides the resource representation.
+        Provides the resource representation as a python object (dict for single resources, list for collections).
 
         :return:
             Returns the resource representation.
+
+        ..  todo::
+            Finalize behavior and complete documentation with sample code.
         """
-        return self._service.get(self.path)
+        self._response = self._service.get(self.path)
+        self._response.raise_for_status()
+        return self._response.json()
 
     def item(self, identity):
         """
         Temporary ``item()`` method documentation.
         :param identity:
         :return:
+
+        ..  todo::
+            Finalize behavior and complete documentation with sample code.
         """
         return _Resource(identity, self._service, self)
 
