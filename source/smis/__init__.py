@@ -49,7 +49,7 @@ docs_url=u'http://simple-mis.readthedocs.org/en/latest/'
 
 version_major = u'0'
 version_minor = u'0'
-version_patch = u'6'
+version_patch = u'7'
 
 version = u'{major}.{minor}'.format(major=version_major, minor=version_minor)
 release = u'{version}.{build}'.format(version=version, build=version_patch)
