@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='smis',
-    version='0.0.5',
+    version='0.0.6',
     description='Simple MIS Library',
     long_description='A simple library to access Autodesk InfraWorks 360 Model Information Service.',
     author='Isaac Rodriguez',
@@ -12,5 +12,5 @@ setup(
     url='https://github.com/CurroRodriguez/smis-python',
     package_dir = {'': 'source'},
     packages=['smis'],
-        install_requires=['requests>=2.7', 'requests-oauthlib>=0.5']
+    install_requires=['requests>=2.7', 'requests-oauthlib>=0.5']
 )
